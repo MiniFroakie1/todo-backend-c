@@ -1,5 +1,6 @@
 #include "headers/handler.h"
 #include "headers/pg.h"
+#include "headers/post_handler.h"
 #include "headers/response_builder.h"
 #include "headers/utils.h"
 #include <microhttpd.h>
@@ -34,9 +35,14 @@ enum MHD_Result handler(void *cls, struct MHD_Connection *connection,
       response_api =
           (HTTP_response){.body = simple_message("Hello World!"), .status = OK};
     } else if (strcmp(url_str, "/database") == 0) {
-      void **values = getAllIssues();
-      response_api =
-          (HTTP_response){.body = list_message(values), .status = OK};
+      if (strcmp(method_str, "GET") == 0) {
+        void **values = getAllIssues();
+        response_api =
+            (HTTP_response){.body = list_message(values), .status = OK};
+      } else if (strcmp(method_str, "POST") == 0) {
+        handle_post(&response_api);
+        response_api = (HTTP_response){.body = "", .status = NOT_IMPLEMENTED};
+      }
     } else {
       response_api = (HTTP_response){.body = simple_message("Not Found"),
                                      .status = NOT_FOUND};
