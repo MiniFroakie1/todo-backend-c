@@ -4,7 +4,6 @@
 #include "headers/utils.h"
 #include <microhttpd.h>
 #include <setjmp.h>
-#include <stddef.h>
 #include <stdio.h>
 #include <string.h>
 
